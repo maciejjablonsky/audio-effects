@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+*.sqlite
+
+out/*
+.vs/*
+.vscode/*
+build/*
