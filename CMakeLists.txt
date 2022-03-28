@@ -5,5 +5,8 @@ set(USE_FOLDERS ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_subdirectory(3rd_party)
+include(${CMAKE_BINARY_DIR}/conan_paths.cmake)
+
+add_subdirectory(samples)
 add_subdirectory(src)
+message(${SPLT_SAMPLES_DIR})
