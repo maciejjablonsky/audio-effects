@@ -38,7 +38,7 @@ struct header
     uint32_t data_format_size = 16;
     uint16_t audio_format     = format::PCM;
     uint16_t channels;
-    uint32_t sample_rate;
+    uint32_t sample_rate; // in Hz
     uint32_t bytes_per_second;
     uint16_t bytes_per_sample;
     uint16_t bits_per_sample;

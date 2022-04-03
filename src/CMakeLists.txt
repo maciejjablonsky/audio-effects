@@ -1,1 +1,2 @@
 add_subdirectory(wave)
+add_subdirectory(add_sine)

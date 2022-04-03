@@ -46,7 +46,11 @@ class reader
     template <typename T> size_t read(std::span<T> buffer);
     size_t frames_left() const;
     size_t bytes_left() const;
-    template <typename T> bool samples_as() const;
+    template <std::signed_integral T> bool samples_as() const
+    {
+        return (_header.bits_per_sample / 2) == sizeof(T);
+    }
+
     void reset();
     bool eof() const;
     const wave::header & header() const;
@@ -57,9 +61,5 @@ template <typename T> size_t reader::read(std::span<T> buffer)
     return std::fread(buffer.data(), sizeof(T), buffer.size(), _file);
 }
 
-template <typename T> bool reader::samples_as() const
-{
-    return std::same_as<T, int16_t>;
-}
 static_assert(Reader<reader>);
 } // namespace splt::wave
