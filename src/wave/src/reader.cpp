@@ -1,3 +1,4 @@
+#include <fmt/format.h>
 #include <wave/reader.hpp>
 
 namespace splt::wave
@@ -16,7 +17,8 @@ reader::reader(const std::filesystem::path& file_path)
           auto file = std::fopen(file_path.string().c_str(), "rb");
           if (!file)
           {
-              throw std::runtime_error("Failed to open file");
+              throw std::runtime_error(
+                  fmt::format("Failed to open file at {}", file_path.string()));
           }
           return file;
       }()},
@@ -26,10 +28,7 @@ reader::reader(const std::filesystem::path& file_path)
 
 reader::~reader()
 {
-    if (_file)
-    {
-        std::fclose(_file);
-    }
+    std::fclose(_file);
 }
 
 void reader::reset()
@@ -42,11 +41,15 @@ bool reader::eof() const
     return std::feof(_file);
 }
 
+const wave::header& reader::header() const
+{
+    return _header;
+}
+
 size_t reader::bytes_left() const
 {
-    const auto file_size = _header.file_size + sizeof(wave::header::chunk_id) +
-                           sizeof(wave::header::file_size);
-    const auto pos = std::ftell(_file);
+    const auto file_size = _header.file_size + wave::file_size_skipped;
+    const auto pos       = std::ftell(_file);
     return file_size - pos;
 }
 

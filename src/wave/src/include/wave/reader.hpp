@@ -13,20 +13,23 @@ template <typename T>
 concept Reader = requires(T t, const T const_t, int16_t int16)
 {
     T{std::filesystem::path{}};
-    //{
-    //    t.read(std::span<int16_t>{})
-    //    } -> std::convertible_to<size_t>; // returns std::min(span.size(),
-    //                                      // acutally_read)
-    //{
-    //    t.read(std::span<int32_t>{})
-    //    } -> std::convertible_to<size_t>; // returns std::min(span.size(),
-    //                                      // acutally_read)
+    {
+        t.read(std::span<int16_t>{})
+        } -> std::convertible_to<size_t>; // returns std::min(span.size(),
+                                          // acutally_read)
+    // {
+    //     t.read(std::span<int32_t>{})
+    //     } -> std::convertible_to<size_t>; // returns std::min(span.size(),
+    //                                       // acutally_read)
     {
         const_t.frames_left()
         } -> std::convertible_to<size_t>;
     {
         const_t.bytes_left()
         } -> std::convertible_to<size_t>;
+    {
+        const_t.header()
+        } -> std::convertible_to<wave::header>;
 };
 
 class reader
@@ -46,6 +49,7 @@ class reader
     template <typename T> bool samples_as() const;
     void reset();
     bool eof() const;
+    const wave::header & header() const;
 };
 
 template <typename T> size_t reader::read(std::span<T> buffer)
