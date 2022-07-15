@@ -53,7 +53,7 @@ class reader
 
     void reset();
     bool eof() const;
-    const wave::header & header() const;
+    const wave::header& header() const;
 };
 
 template <typename T> size_t reader::read(std::span<T> buffer)

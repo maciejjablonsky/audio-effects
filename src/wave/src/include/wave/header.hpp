@@ -6,6 +6,7 @@
 #include <range/v3/view/reverse.hpp>
 #include <range/v3/view/transform.hpp>
 #include <string_view>
+#include <algorithm>
 
 namespace splt::wave
 {
@@ -61,15 +62,15 @@ constexpr auto file_size_skipped =
 
 constexpr bool validate_header(const header& h) noexcept
 {
-    bool valid = true;
-    valid &= (h.chunk_id == detail::tag_to_integer("RIFF"));
-    valid &= (h.format == detail::tag_to_integer("WAVE"));
-    valid &= (h.chunk_marker == detail::tag_to_integer("fmt "));
-    valid &= (h.data_id == detail::tag_to_integer("data"));
-    valid &= (h.bytes_per_sample == (h.channels * h.bits_per_sample) / 8);
-    valid &= (h.bytes_per_second ==
-              (h.channels * h.sample_rate * h.bits_per_sample) / 8);
-    return valid;
+    auto checks = {h.chunk_id == detail::tag_to_integer("RIFF"),
+                   h.format == detail::tag_to_integer("WAVE"),
+                   h.chunk_marker == detail::tag_to_integer("fmt "),
+                   h.data_id == detail::tag_to_integer("data"),
+                   h.bytes_per_sample == (h.channels * h.bits_per_sample) / 8,
+                   h.bytes_per_second ==
+                       (h.channels * h.sample_rate * h.bits_per_sample) / 8};
+    return std::all_of(
+        std::begin(checks), std::end(checks), [](auto c) { return c; });
 }
 
 } // namespace splt::wave
