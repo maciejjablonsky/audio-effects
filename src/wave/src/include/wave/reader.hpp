@@ -48,7 +48,7 @@ class reader
     size_t bytes_left() const;
     template <std::signed_integral T> bool samples_as() const
     {
-        return (_header.bits_per_sample / 2) == sizeof(T);
+        return (_header.bits_per_sample / 8) == sizeof(T);
     }
 
     void reset();
