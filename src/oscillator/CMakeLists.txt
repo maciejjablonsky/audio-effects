@@ -1,0 +1,2 @@
+add_library(splt_oscillator INTERFACE)
+target_include_directories(splt_oscillator INTERFACE include)

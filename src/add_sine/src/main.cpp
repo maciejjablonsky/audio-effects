@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <fmt/format.h>
 #include <numbers>
+#include <oscillator/sine.hpp>
 #include <wave/reader.hpp>
 #include <wave/writer.hpp>
 
@@ -23,38 +24,6 @@ auto configure_cli()
     return options;
 }
 
-class sine_generator
-{
-  private:
-    const float _wave_frequency;
-    const uint32_t _sampling_frequency;
-    int64_t _sample_index = 0;
-
-  public:
-    sine_generator(float wave_frequency, uint32_t sampling_frequency)
-        : _wave_frequency(wave_frequency),
-          _sampling_frequency(sampling_frequency),
-          _sample_index(-wave_frequency)
-    {
-        assert(0 != _wave_frequency);
-        assert(0 != _sampling_frequency);
-    }
-
-    float next_sample()
-    {
-        _sample_index = std::round(_sample_index + _wave_frequency);
-        _sample_index %= _sampling_frequency;
-
-        return std::sin(
-            2 * std::numbers::pi *
-            (static_cast<double>(_sample_index) / _sampling_frequency));
-    }
-
-    void reset()
-    {
-        _sample_index = 0;
-    }
-};
 
 void apply_sine(const std::filesystem::path& input_file,
                 const std::filesystem::path& output_file,
@@ -65,7 +34,7 @@ void apply_sine(const std::filesystem::path& input_file,
     auto h = input.header();
     splt::wave::writer output{h, output_file};
 
-    sine_generator g{sound_frequency, h.sample_rate};
+    splt::oscillator::sine g{sound_frequency, h.sample_rate};
 
     while (!input.eof())
     {
