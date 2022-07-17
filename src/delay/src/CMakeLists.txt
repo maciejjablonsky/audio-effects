@@ -1,0 +1,5 @@
+find_package(cxxopts CONFIG REQUIRED)
+find_package(fmt CONFIG REQUIRED)
+find_package(Boost CONFIG REQUIRED)
+add_executable(splt_delay main.cpp)
+target_link_libraries(splt_delay PRIVATE splt_oscillator cxxopts::cxxopts fmt::fmt splt_wave Boost::headers)
