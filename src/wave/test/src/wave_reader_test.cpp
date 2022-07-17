@@ -17,7 +17,7 @@ TEST(WaveReaderTest, Read)
                                              std::pmr::get_default_resource()};
     std::span samples_span{samples_buffer.data(), samples_buffer.size()};
     auto samples_read = reader.read(samples_span);
-    EXPECT_EQ(samples_read, 0xE88F0);
+    EXPECT_EQ(samples_read.size(), 0xE88F0);
 }
 
 TEST(WaveReaderTest, BulkAndStreamingRead)
@@ -49,7 +49,7 @@ TEST(WaveReaderTest, BulkAndStreamingRead)
         constexpr auto chunk_size = 0x400;
         std::span read_span{write_position, chunk_size};
         auto read_count = streaming_reader.read(read_span);
-        write_position += read_count;
+        write_position += read_count.size();
     }
     EXPECT_EQ(bulk_samples_buffer, streaming_samples_buffer);
     ASSERT_TRUE(bulk_reader.eof());

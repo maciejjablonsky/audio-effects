@@ -24,7 +24,6 @@ auto configure_cli()
     return options;
 }
 
-
 void apply_sine(const std::filesystem::path& input_file,
                 const std::filesystem::path& output_file,
                 float sound_frequency)
@@ -40,11 +39,11 @@ void apply_sine(const std::filesystem::path& input_file,
     {
         constexpr auto samples_n = 1024;
         std::pmr::vector<int16_t> buffer(samples_n);
-        auto read = input.read(std::span{buffer.data(), buffer.size()});
-        std::for_each_n(std::begin(buffer), read, [&](auto& sample) {
+        auto read= input.read(std::span{buffer});
+        std::for_each(std::begin(read), std::end(read), [&](auto& sample) {
             sample += 2000 * g.next_sample();
         });
-        output.write(std::span{buffer.data(), read});
+        output.write(read);
     }
 }
 
